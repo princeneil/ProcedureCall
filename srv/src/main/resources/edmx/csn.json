@@ -1,0 +1,84 @@
+{
+  "namespace": "my.bookshop",
+  "definitions": {
+    "CatalogService": {
+      "kind": "service",
+      "@source": "srv/cat-service.cds"
+    },
+    "CatalogService.Books": {
+      "kind": "entity",
+      "@Capabilities.DeleteRestrictions.Deletable": false,
+      "@Capabilities.InsertRestrictions.Insertable": false,
+      "@Capabilities.UpdateRestrictions.Updatable": false,
+      "@cds.persistence.name": "CATALOGSERVICE_BOOKS",
+      "@readonly": true,
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "my.bookshop.Books"
+            ]
+          }
+        }
+      },
+      "elements": {
+        "ID": {
+          "@cds.persistence.name": "ID",
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "title": {
+          "@cds.persistence.name": "TITLE",
+          "type": "cds.String"
+        },
+        "stock": {
+          "@cds.persistence.name": "STOCK",
+          "type": "cds.Integer"
+        }
+      },
+      "$syntax": "projection"
+    },
+    "CatalogService.insertBook": {
+      "kind": "action",
+      "params": {
+        "bookId": {
+          "kind": "param",
+          "@cds.persistence.name": "BOOKID",
+          "type": "cds.Integer"
+        },
+        "multiplier": {
+          "kind": "param",
+          "@cds.persistence.name": "MULTIPLIER",
+          "type": "cds.Integer"
+        }
+      }
+    },
+    "my.bookshop.Books": {
+      "kind": "entity",
+      "@cds.persistence.name": "MY_BOOKSHOP_BOOKS",
+      "elements": {
+        "ID": {
+          "@cds.persistence.name": "ID",
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "title": {
+          "@cds.persistence.name": "TITLE",
+          "type": "cds.String"
+        },
+        "stock": {
+          "@cds.persistence.name": "STOCK",
+          "type": "cds.Integer"
+        }
+      }
+    }
+  },
+  "version": {
+    "csn": "1.0"
+  },
+  "meta": {
+    "creator": "CDS Compiler v1.13.4"
+  },
+  "$version": "1.0",
+  "@sql_mapping": "plain"
+}

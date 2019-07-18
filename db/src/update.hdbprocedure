@@ -1,0 +1,19 @@
+PROCEDURE "update"( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+ AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+	/**	INSERT INTO "MY_BOOKSHOP_BOOKS" ("ID","TITLE","STOCK")
+		VALUES (1,'ABC',5);   **/
+   
+		INSERT INTO "MY_BOOKSHOP_BOOKS"
+		SELECT LPAD(ROUND((RAND() * 1000000),0),7,'0000000') as ID,
+				LPAD(ROUND((RAND() * 1000000),0),7,'0000000') as TITLE,
+				LPAD(ROUND((RAND() * 1000000),0),7,'0000000') as STOCK
+		FROM DUMMY; 
+   
+END
