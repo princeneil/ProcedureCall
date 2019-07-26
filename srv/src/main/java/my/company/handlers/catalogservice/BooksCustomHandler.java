@@ -69,11 +69,16 @@ public class BooksCustomHandler {
             .selectColumns("ID", "Title", "Stock")
             .build();                  			
 		
+		String queryString = "CALL \"PROCEDURECALL_PROCEDURECALL_HDI_CONTAINER\".\"newRecord\"(RESULT => ?)";
+		CDSQuery cdsProc = new CDSQuery(queryString, "CatalogService.Books");
+		
+		
 		try {
-			CDSSelectQueryResult cdsSelectQueryResult = dsHandler.executeQuery(cdsQuery);
-			List<EntityData> ed = cdsSelectQueryResult.getResult();
+			CDSSelectQueryResult cdsSelectQueryResult = dsHandler.executeQuery(cdsProc);
+			cdsSelectQueryResult = dsHandler.executeQuery(cdsQuery);
+			//List<EntityData> ed = cdsSelectQueryResult.getResult();
 			//createResponse = CreateResponse.setSuccess().setData(ed).response();
-			procResponse = OperationResponse.setSuccess().setEntityData(ed).response();
+			procResponse = OperationResponse.setSuccess().setEntityData(cdsSelectQueryResult.getResult()).response();
 			return procResponse;
 			//ed = cdsSelectQueryResult.getResult();
 			//ed = null;

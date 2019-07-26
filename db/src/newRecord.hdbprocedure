@@ -1,4 +1,4 @@
-PROCEDURE "newRecord"( )
+PROCEDURE "newRecord"(out result "MY_BOOKSHOP_BOOKS" )
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
    --DEFAULT SCHEMA <default_schema_name>
@@ -9,11 +9,26 @@ BEGIN
    *************************************/
 	/**	INSERT INTO "MY_BOOKSHOP_BOOKS" ("ID","TITLE","STOCK")
 		VALUES (1,'ABC',5);   **/
+
+		DECLARE vId integer;
+		DECLARE vTitle NVARCHAR(5000);
+		DECLARE vStock integer;
    
-		INSERT INTO "MY_BOOKSHOP_BOOKS"
+		select LPAD(ROUND((RAND() * 1000000),0),7,'0000000') into vId from dummy;
+		select LPAD(ROUND((RAND() * 1000000),0),7,'0000000') into vTitle from dummy;
+		select LPAD(ROUND((RAND() * 1000000),0),7,'0000000') into vStock from dummy;
+
+		INSERT INTO "MY_BOOKSHOP_BOOKS" ("ID","TITLE","STOCK")
+		VALUES (vId,vTitle,vStock); 
+   
+		result = select * from "MY_BOOKSHOP_BOOKS" where ID = :vId;
+   
+/**		INSERT INTO "MY_BOOKSHOP_BOOKS"
 		SELECT LPAD(ROUND((RAND() * 1000000),0),7,'0000000') as ID,
 				LPAD(ROUND((RAND() * 1000000),0),7,'0000000') as TITLE,
 				LPAD(ROUND((RAND() * 1000000),0),7,'0000000') as STOCK
-		FROM DUMMY; 
+		FROM DUMMY;
+**/		
+		
    
 END
