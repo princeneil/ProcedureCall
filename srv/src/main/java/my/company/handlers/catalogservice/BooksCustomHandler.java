@@ -10,6 +10,20 @@ import com.sap.cloud.sdk.service.prov.api.ExtensionHelper;
 import java.util.Map;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.sql.Connection;
+import javax.sql.DataSource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import com.sap.cloud.sdk.hana.connectivity.handler.CDSDataSourceHandler;
+import com.sap.cloud.sdk.hana.connectivity.handler.DataSourceHandlerFactory;
+import com.sap.cloud.sdk.hana.connectivity.cds.CDSQuery;
+import com.sap.cloud.sdk.hana.connectivity.cds.CDSSelectQueryBuilder;
+import com.sap.cloud.sdk.hana.connectivity.cds.CDSSelectQueryResult;
+import com.sap.cloud.sdk.service.prov.api.response.ErrorResponse;
+import com.sap.cloud.sdk.hana.connectivity.cds.CDSException;
+import com.sap.cloud.sdk.service.prov.api.EntityData;
+import com.sap.cloud.sdk.service.prov.api.response.CreateResponse;
+
 
 //import com.sap.cloud.sdk.service.prov.api.operations.Query;
 //import com.sap.cloud.sdk.service.prov.api.request.QueryRequest;
@@ -40,6 +54,52 @@ import org.slf4j.LoggerFactory;
 public class BooksCustomHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Action(Name="callProc", serviceName="CatalogService")
+	public OperationResponse procResponse( OperationRequest actionRequest, ExtensionHelper extensionHelper )
+	{
+		//EntityData ed = null;
+		//CreateResponse createResponse;
+		OperationResponse procResponse = null;
+		
+		CDSDataSourceHandler dsHandler = DataSourceHandlerFactory.getInstance().getCDSHandler(getConnection(), "my.bookshop");
+		
+		CDSQuery cdsQuery = new CDSSelectQueryBuilder("CatalogService.Books")
+            .top(2)
+            .selectColumns("ID", "Title", "Stock")
+            .build();                  			
+		
+		try {
+			CDSSelectQueryResult cdsSelectQueryResult = dsHandler.executeQuery(cdsQuery);
+			List<EntityData> ed = cdsSelectQueryResult.getResult();
+			//createResponse = CreateResponse.setSuccess().setData(ed).response();
+			procResponse = OperationResponse.setSuccess().setEntityData(ed).response();
+			return procResponse;
+			//ed = cdsSelectQueryResult.getResult();
+			//ed = null;
+		} catch (CDSException e) {
+			ErrorResponse er = ErrorResponse.getBuilder().setMessage("BROKEN")
+				.setStatusCode(500).setCause(e.getCause()).response();
+			//createResponse = CreateResponse.setError(er);
+			//return createResponse;
+			return OperationResponse.setError(er);
+		}
+	    
+	    //return createResponse;		
+		//return null;
+	}
+
+	private static Connection getConnection() {
+	  Connection conn = null;
+	  Context ctx;
+	  try {
+	    ctx = new InitialContext();
+	    conn = ((DataSource) ctx.lookup("java:comp/env/jdbc/java-hdi-container")).getConnection();
+	  } catch (Exception e) {
+	    e.printStackTrace();
+	  }
+	  return conn;
+	}
 
 	@Action(Name="insertBook", serviceName="CatalogService")
 	public OperationResponse updateStock(OperationRequest actionRequest, ExtensionHelper extensionHelper )

@@ -50,6 +50,9 @@ modules:
           url: ~{url}
      - name: uaa_ProcedureCall
 
+
+  
+
 resources:
   - name: ProcedureCall-hdi-container
     type: com.sap.xs.hdi-container

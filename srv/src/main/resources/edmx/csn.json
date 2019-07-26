@@ -2,8 +2,7 @@
   "namespace": "my.bookshop",
   "definitions": {
     "CatalogService": {
-      "kind": "service",
-      "@source": "srv/cat-service.cds"
+      "kind": "service"
     },
     "CatalogService.Books": {
       "kind": "entity",
@@ -37,6 +36,9 @@
         }
       },
       "$syntax": "projection"
+    },
+    "CatalogService.callProc": {
+      "kind": "action"
     },
     "CatalogService.insertBook": {
       "kind": "action",
@@ -77,7 +79,7 @@
     "csn": "1.0"
   },
   "meta": {
-    "creator": "CDS Compiler v1.13.4"
+    "creator": "CDS Compiler v1.15.0"
   },
   "$version": "1.0",
   "@sql_mapping": "plain"
