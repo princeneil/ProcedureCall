@@ -22,7 +22,7 @@ BEGIN
 		VALUES (vId,vTitle,vStock); 
    
 		result = select * from "MY_BOOKSHOP_BOOKS" where ID = :vId;
-   
+
 /**		INSERT INTO "MY_BOOKSHOP_BOOKS"
 		SELECT LPAD(ROUND((RAND() * 1000000),0),7,'0000000') as ID,
 				LPAD(ROUND((RAND() * 1000000),0),7,'0000000') as TITLE,

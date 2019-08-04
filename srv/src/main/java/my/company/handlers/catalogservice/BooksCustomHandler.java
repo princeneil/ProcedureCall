@@ -21,8 +21,8 @@ import com.sap.cloud.sdk.hana.connectivity.cds.CDSSelectQueryBuilder;
 import com.sap.cloud.sdk.hana.connectivity.cds.CDSSelectQueryResult;
 import com.sap.cloud.sdk.service.prov.api.response.ErrorResponse;
 import com.sap.cloud.sdk.hana.connectivity.cds.CDSException;
-import com.sap.cloud.sdk.service.prov.api.EntityData;
-import com.sap.cloud.sdk.service.prov.api.response.CreateResponse;
+//import com.sap.cloud.sdk.service.prov.api.EntityData;
+//import com.sap.cloud.sdk.service.prov.api.response.CreateResponse;
 
 
 //import com.sap.cloud.sdk.service.prov.api.operations.Query;
@@ -42,7 +42,7 @@ import com.sap.cloud.sdk.service.prov.api.response.CreateResponse;
 //import com.sap.cloud.sdk.service.prov.api.response.DeleteResponse;
 //import com.sap.cloud.sdk.service.prov.api.response.ErrorResponse;
 import java.util.List;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,40 +58,35 @@ public class BooksCustomHandler {
 	@Action(Name="callProc", serviceName="CatalogService")
 	public OperationResponse procResponse( OperationRequest actionRequest, ExtensionHelper extensionHelper )
 	{
-		//EntityData ed = null;
-		//CreateResponse createResponse;
 		OperationResponse procResponse = null;
 		
+		//Get parameters - action: 1 = execute standard query, 2 = execute HANA procedure
+		Map<String, Object> parameters = actionRequest.getParameters();
+		String action = String.valueOf(parameters.get("action"));
+		
 		CDSDataSourceHandler dsHandler = DataSourceHandlerFactory.getInstance().getCDSHandler(getConnection(), "my.bookshop");
-		
-		CDSQuery cdsQuery = new CDSSelectQueryBuilder("CatalogService.Books")
-            .top(2)
-            .selectColumns("ID", "Title", "Stock")
-            .build();                  			
-		
-		String queryString = "CALL \"PROCEDURECALL_PROCEDURECALL_HDI_CONTAINER\".\"newRecord\"(RESULT => ?)";
-		CDSQuery cdsProc = new CDSQuery(queryString, "CatalogService.Books");
-		
-		
+
 		try {
-			CDSSelectQueryResult cdsSelectQueryResult = dsHandler.executeQuery(cdsProc);
-			cdsSelectQueryResult = dsHandler.executeQuery(cdsQuery);
-			//List<EntityData> ed = cdsSelectQueryResult.getResult();
-			//createResponse = CreateResponse.setSuccess().setData(ed).response();
+			CDSSelectQueryResult cdsSelectQueryResult = null;
+			if (action.equals("1")) {
+				CDSQuery cdsQuery = new CDSSelectQueryBuilder("CatalogService.Books")
+		            .top(2)
+		            .selectColumns("ID", "Title", "Stock")
+		            .build();  
+				cdsSelectQueryResult = dsHandler.executeQuery(cdsQuery);
+			} else {
+				String queryString = "CALL \"PROCEDURECALL_PROCEDURECALL_HDI_CONTAINER\".\"newRecord\"(?)";
+				//String queryString = "CALL \"PROCEDURECALL_PROCEDURECALL_HDI_CONTAINER\".\"newRecord\"(RESULT => ?)";
+				CDSQuery cdsProc = new CDSQuery(queryString, "CatalogService.Books");				
+				cdsSelectQueryResult = dsHandler.executeQuery(cdsProc);
+			};
 			procResponse = OperationResponse.setSuccess().setEntityData(cdsSelectQueryResult.getResult()).response();
 			return procResponse;
-			//ed = cdsSelectQueryResult.getResult();
-			//ed = null;
 		} catch (CDSException e) {
 			ErrorResponse er = ErrorResponse.getBuilder().setMessage("BROKEN")
 				.setStatusCode(500).setCause(e.getCause()).response();
-			//createResponse = CreateResponse.setError(er);
-			//return createResponse;
 			return OperationResponse.setError(er);
 		}
-	    
-	    //return createResponse;		
-		//return null;
 	}
 
 	private static Connection getConnection() {
@@ -106,7 +101,7 @@ public class BooksCustomHandler {
 	  return conn;
 	}
 
-	@Action(Name="insertBook", serviceName="CatalogService")
+	@Action(Name="updateStock", serviceName="CatalogService")
 	public OperationResponse updateStock(OperationRequest actionRequest, ExtensionHelper extensionHelper )
 	{
 		

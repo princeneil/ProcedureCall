@@ -39,6 +39,9 @@
 							text="{worklistView>/worklistTableTitle}"
 							level="H3"/>
 						<ToolbarSpacer />
+						<Button text="Execute function to multiply by 2" press="onFunction" type="Accept"></Button>
+						<Button text="Execute CDS query" press="onCDSQuery" type="Accept"></Button>
+						<Button text="Execute procedure" press="onProcedure" type="Accept"></Button>
 						<SearchField
 							id="searchField"
 							tooltip="{i18n>worklistSearchTooltip}"

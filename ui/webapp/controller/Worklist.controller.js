@@ -51,6 +51,65 @@ sap.ui.define([
 			});
 		},
 
+		onFunction : function () {
+			// Multiply Book ID '1' stock level by 2
+			var oModel = this.getView().getModel();
+			//var oModel = this.getOwnerComponent().getModel();
+			var oEntry = {};
+			oEntry.bookId = 1;
+			oEntry.multiplier = 2;
+
+			var mParams = {};
+			mParams.success = function() {
+				sap.m.MessageToast.show("Stock multiplied by 2");
+				oModel.refresh();
+			};
+			mParams.error = function() {
+				sap.m.MessageToast.show("CFunction call failed");
+				oModel.refresh();
+			};				
+			mParams.urlParameters = oEntry;
+			oModel.create("/updateStock", oEntry, mParams);			
+		},
+		
+		onCDSQuery : function () {
+			var oModel = this.getOwnerComponent().getModel();
+			var oEntry = {};
+			oEntry.action = 1;
+
+			var mParams = {};
+			mParams.success = function() {
+				sap.m.MessageToast.show("CDS Query executed");
+			};
+			mParams.error = function() {
+				sap.m.MessageToast.show("CDS Query call failed");
+				oModel.refresh();
+			};			
+			//mParams.error = this.onErrorCall;
+			mParams.urlParameters = oEntry;
+			oModel.create("/callProc", oEntry, mParams);				
+		},
+		
+		onProcedure : function () {
+			var oModel = this.getOwnerComponent().getModel();
+			var oEntry = {};
+			oEntry.action = 2;
+
+			var mParams = {};
+			mParams.success = function() {
+				sap.m.MessageToast.show("HANA Procedure executed");
+				oModel.refresh();
+			};
+			mParams.error = function() {
+				sap.m.MessageToast.show("HANA procedure call failed (or did it)");
+				oModel.refresh();
+			};			
+			//mParams.error = this.onErrorCall;
+			mParams.urlParameters = oEntry;
+			oModel.create("/callProc", oEntry, mParams);			
+		},
+
+
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */

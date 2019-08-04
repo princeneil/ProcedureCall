@@ -38,9 +38,16 @@
       "$syntax": "projection"
     },
     "CatalogService.callProc": {
-      "kind": "action"
+      "kind": "action",
+      "params": {
+        "action": {
+          "kind": "param",
+          "@cds.persistence.name": "ACTION",
+          "type": "cds.Integer"
+        }
+      }
     },
-    "CatalogService.insertBook": {
+    "CatalogService.updateStock": {
       "kind": "action",
       "params": {
         "bookId": {

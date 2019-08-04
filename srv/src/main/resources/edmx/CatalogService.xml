@@ -7,8 +7,10 @@
     <Schema Namespace="CatalogService" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
       <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
         <EntitySet Name="Books" EntityType="CatalogService.Books"/>
-        <FunctionImport Name="callProc" m:HttpMethod="POST"/>
-        <FunctionImport Name="insertBook" m:HttpMethod="POST">
+        <FunctionImport Name="callProc" m:HttpMethod="POST">
+          <Parameter Name="action" Type="Edm.Int32" Mode="In" Nullable="true"/>
+        </FunctionImport>
+        <FunctionImport Name="updateStock" m:HttpMethod="POST">
           <Parameter Name="bookId" Type="Edm.Int32" Mode="In" Nullable="true"/>
           <Parameter Name="multiplier" Type="Edm.Int32" Mode="In" Nullable="true"/>
         </FunctionImport>
