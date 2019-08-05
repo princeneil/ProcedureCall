@@ -1,0 +1,20 @@
+{
+"format_version": 1,
+"imports":
+[
+{
+"target_table": "MY_BOOKSHOP_BOOKS",
+"source_data":{
+	"data_type": "CSV",
+	"file_name": "book.csv",
+	"has_header": true,
+	"delete_existing_foreign_data": true,
+	"dialect": "HANA",
+	"type_config": { "delimiter": "," }
+},
+"import_settings":{
+	"import_columns": [	"ID", "TITLE",	"STOCK" ]
+},
+	"column_mapping": {	"ID": 1, "TITLE": 2, "STOCK": 3 }
+}
+]}
